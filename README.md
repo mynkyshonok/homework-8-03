@@ -27,8 +27,33 @@
    
  * файл gitlab-ci.yml для своего проекта или вставьте код в соответствующее поле в шаблоне; 
  * скриншоты с успешно собранными сборками.
- 
- 
+
+#### Решение:
+```yaml
+stages:
+  - test
+  - build
+
+test:
+  stage: test
+  image: golang:1.17
+  script: 
+   - go test .
+  tags:
+    - my-runner
+
+build:
+  stage: build
+  image: docker:latest
+  script:
+   - docker build .
+  tags:
+     - my-runner
+```
+![Пайплайн](8-03-3.png)
+![джоба Test](8-03-4.png)
+![джоба Build](8-03-5.png)
+
 ---
 ## Дополнительные задания* (со звёздочкой)
 
@@ -44,3 +69,32 @@
  - тесты запускались только при изменении файлов с расширением *.go.
 
 В качестве ответа добавьте в шаблон с решением файл gitlab-ci.yml своего проекта или вставьте код в соответсвующее поле в шаблоне.
+
+#### Решение:
+
+```yaml
+stages:
+  - test
+  - build
+
+test:
+  stage: test
+  image: golang:1.17
+  script: 
+   - go test .
+  tags:
+    - my-runner
+  rules:
+  - changes:
+      - "**/*.go"
+  - when: never
+
+build:
+  stage: build
+  image: docker:latest
+  script:
+   - docker build .
+  tags:
+     - my-runner
+  needs: []
+```
